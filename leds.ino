@@ -13,7 +13,6 @@
 #define NUM_LEDS    10
 CRGB leds[NUM_LEDS];
 
-#define BRIGHTNESS          96
 #define FRAMES_PER_SECOND  120
 
 
@@ -23,6 +22,8 @@ const char* password = "";
 
 // Set web server port number to 80
 WiFiServer server(80);
+
+uint8 brightness = 30;
 
 // Variable to store the HTTP request
 String header;
@@ -68,9 +69,6 @@ void setup() {
   FastLED.addLeds<LED_TYPE,DATA_PIN,COLOR_ORDER>(leds, NUM_LEDS).setCorrection(TypicalLEDStrip);
   //FastLED.addLeds<LED_TYPE,DATA_PIN,CLK_PIN,COLOR_ORDER>(leds, NUM_LEDS).setCorrection(TypicalLEDStrip);
 
-  // set master brightness control
-  FastLED.setBrightness(BRIGHTNESS);
-
   ArduinoOTA.onStart([]() {
     String type;
     if (ArduinoOTA.getCommand() == U_FLASH) {
@@ -114,7 +112,10 @@ uint8_t gHue = 0; // rotating "base color" used by many of the patterns
 
 void loop(){
     ArduinoOTA.handle();
-  
+
+    // set master brightness control
+    FastLED.setBrightness(brightness);
+
     // Call the current pattern function once, updating the 'leds' array
     gPatterns[gCurrentPatternNumber]();
 
@@ -167,6 +168,16 @@ void loop(){
               Serial.println("Cycle colors off");
               cycleColors = "off";
               gHue++;
+            } else if (header.indexOf("GET /brightness/up") >= 0) {
+              Serial.println("Brightness up");
+              if(brightness < 245) {
+                brightness = brightness + 10;
+              }
+            } else if (header.indexOf("GET /brightness/down") >= 0) {
+              Serial.println("Brightness down");
+              if(brightness > 9) {
+                brightness = brightness - 10;
+              }
             }
             
             // Display the HTML web page
@@ -184,6 +195,9 @@ void loop(){
             client.println("<body><h1>LED Strip</h1>");
                    
             client.println("<p><a href=\"/next\"><button class=\"button\">Next effect</button></a></p>");
+
+            client.println("<p><a href=\"/brightness/up\"><button class=\"button\">Brightness up</button></a></p>");
+            client.println("<p><a href=\"/brightness/down\"><button class=\"button\">Brightness down</button></a></p>");
                     
             if (cycleColors=="off") {
               client.println("<p><a href=\"/color/cycle/on\"><button class=\"button button2\">Cycle colors</button></a></p>");

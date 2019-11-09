@@ -11,9 +11,15 @@ RGB LED strip controller for ESP8266. Go to `http://leds.local` to access the UI
 # Install packages
 > platformio lib install
 
-# Connect your board and flash the firmware
-> platformio run -t upload
+# Upload firmware over serial connection
+> platformio run -t upload --upload-port <your_serial_port>
 
 # Monitor serial port
 > pio device monitor
+```
+
+## Over the Air Updates
+
+```
+platformio run --target upload
 ```

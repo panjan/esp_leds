@@ -2,6 +2,7 @@
 #include <ESP8266WiFi.h>
 #include <ArduinoOTA.h>
 #include <FastLED.h>
+#include <ESP8266mDNS.h>
 
 #if FASTLED_VERSION < 3001000
 #error "Requires FastLED 3.1 or later; check github for latest code."
@@ -55,6 +56,11 @@ void setup() {
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
     Serial.print(".");
+  }
+
+  // Multicast hostname
+  if (MDNS.begin("leds")) {
+    Serial.println("MDNS responder started");
   }
   
   // Print local IP address and start web server

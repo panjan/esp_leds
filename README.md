@@ -1,6 +1,6 @@
 # ESP Leds Controller
 
-RGB LED strip controller for ESP8266. Go to the device's IP address in your browser to access the UI.
+RGB LED strip controller for ESP8266. Go to `http://leds.local` to access the UI.
 
 ## Flashing
 

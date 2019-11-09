@@ -13,6 +13,7 @@ RGB LED strip controller for ESP8266. Go to `http://leds.local` to access the UI
 
 # Connect your board and flash the firmware
 > platformio run -t upload
+
+# Monitor serial port
+> pio device monitor
 ```
-
-
